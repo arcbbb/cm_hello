@@ -40,6 +40,9 @@ $(TARGET).elf: $(SW4STM32_OBJ) $(SRC_OBJ) $(HAL_OBJ) $(NUCLEO144_OBJ)
 flash: $(TARGET).bin
 	sudo $(FLASH) write $< 0x8000000
 
+backup:
+	sudo $(FLASH) read backup.bin 0x8000000 0x200000
+
 uart:
 	sudo screen /dev/ttyACM0 9600
 
