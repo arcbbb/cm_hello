@@ -1,13 +1,15 @@
 
 TARGET := hello
-PREFIX := /workspace/arcbbb/git/20190620_stm32/gcc-arm-none-eabi-8-2018-q4-major/bin/arm-none-eabi-
+PREFIX := /home/yihsiuh/work/gcc-arm-none-eabi-8-2018-q4-major/bin/arm-none-eabi-
 
 CC = $(PREFIX)gcc
 OBJCOPY = $(PREFIX)objcopy
 
 FLASH := /home/arcbbb/bin/st-flash
 
-CFLAGS = -mcpu=cortex-m4
+CFLAGS = -mcpu=cortex-m4 -mfloat-abi=hard
+LDFLAGS = -mcpu=cortex-m4 -mfloat-abi=hard
+
 CFLAGS += \
 	   -I CMSIS/Device/ST/STM32F4xx/Include \
 	   -I CMSIS/Include \
@@ -35,7 +37,7 @@ $(TARGET).bin: $(TARGET).elf
 	$(OBJCOPY) -O binary $< $@
 
 $(TARGET).elf: $(SW4STM32_OBJ) $(SRC_OBJ) $(HAL_OBJ) $(NUCLEO144_OBJ)
-	$(CC) $^ -o $@ -T $(LDSCRIPT) -Wl,-Map,"$(TARGET).map"
+	$(CC) $(LDFLAGS) $^ -o $@ -T $(LDSCRIPT) -Wl,-Map,"$(TARGET).map"
 
 flash: $(TARGET).bin
 	sudo $(FLASH) write $< 0x8000000
