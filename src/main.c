@@ -121,6 +121,7 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
+    printf("UART Printf Example: retarget the C library printf function to the UART\n");
   }
 }
 
