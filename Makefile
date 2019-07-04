@@ -3,11 +3,12 @@ TARGET := hello
 PREFIX := /home/yihsiuh/work/gcc-arm-none-eabi-8-2018-q4-major/bin/arm-none-eabi-
 
 CC = $(PREFIX)gcc
+AR = $(PREFIX)ar
 OBJCOPY = $(PREFIX)objcopy
 
 FLASH := /home/arcbbb/bin/st-flash
 
-CFLAGS = -mcpu=cortex-m4 -mfloat-abi=hard
+CFLAGS = -mcpu=cortex-m4 -mfloat-abi=hard -Os
 LDFLAGS = -mcpu=cortex-m4 -mfloat-abi=hard
 
 CFLAGS += \
@@ -33,10 +34,13 @@ LDSCRIPT := SW4STM32/STM32F429ZI_NUCLEO_144/STM32F429ZITx_FLASH.ld
 
 NUCLEO144_OBJ := STM32F4xx_Nucleo_144/stm32f4xx_nucleo_144.o
 
+libSTM32F429.a: $(HAL_OBJ) $(SW4STM32_OBJ) $(NUCLEO144_OBJ)
+	$(AR) rcs libSTM32F429.a $(HAL_OBJ) $(SW4STM32_OBJ) $(NUCLEO144_OBJ)
+
 $(TARGET).bin: $(TARGET).elf
 	$(OBJCOPY) -O binary $< $@
 
-$(TARGET).elf: $(SW4STM32_OBJ) $(SRC_OBJ) $(HAL_OBJ) $(NUCLEO144_OBJ)
+$(TARGET).elf: $(SRC_OBJ)
 	$(CC) $(LDFLAGS) $^ -o $@ -T $(LDSCRIPT) -Wl,-Map,"$(TARGET).map"
 
 flash: $(TARGET).bin

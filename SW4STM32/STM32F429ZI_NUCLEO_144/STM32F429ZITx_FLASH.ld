@@ -32,6 +32,9 @@
 /* Entry Point */
 ENTRY(Reset_Handler)
 
+GROUP(libSTM32F429.a)
+SEARCH_DIR(.)
+
 /* Highest address of the user mode stack */
 _estack = 0x20030000;    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
